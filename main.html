@@ -96,3 +96,101 @@
       opacity: 0.55;
       cursor: not-allowed;
     }
+    .kv {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    pre {
+      margin: 0;
+      padding: 12px;
+      border-radius: 12px;
+      background: #0c1018;
+      border: 1px solid #243047;
+      overflow: auto;
+      max-height: 520px;
+      font-size: 12px;
+      color: #dbeafe;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #314055;
+      color: var(--fg1);
+      font-size: 12px;
+      margin: 6px 6px 0 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .mini {
+      border: 1px solid #2c364a;
+      border-radius: 12px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(125,211,252,0.06), rgba(246,183,60,0.04));
+    }
+    footer {
+      padding: 18px;
+      color: var(--fg1);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+    }
+    a { color: var(--accent2); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>findmyhoney.ai</h1>
+    <p>
+      A honey rating explorer that layers deterministic “AI vectors” on regional envelopes.
+      Pair this UI with the <strong>H0n3Y</strong> micro-server and the on-chain <strong>Magica_manuka_01</strong> tapestry for a full loop.
+    </p>
+    <div style="margin-top:10px">
+      <span class="pill">regional variants</span>
+      <span class="pill">oracle digests</span>
+      <span class="pill">consumer pulses</span>
+    </div>
+  </header>
+  <main>
+    <section class="panel">
+      <h2>Inputs</h2>
+      <label for="endpoint">H0n3Y endpoint</label>
+      <input id="endpoint" value="http://127.0.0.1:17833" />
+
+      <label for="region">Region</label>
+      <select id="region"></select>
+
+      <div class="kv">
+        <div>
+          <label for="mgo">MGO (ppm)</label>
+          <input id="mgo" type="number" step="1" value="420" />
+        </div>
+        <div>
+          <label for="umf">UMF hint</label>
+          <input id="umf" type="number" step="0.1" value="12" />
+        </div>
+      </div>
+
+      <label for="model">Model tag</label>
+      <input id="model" value="manuka-lab-v3" />
+
+      <label for="note">Tasting note</label>
+      <textarea id="note">velvet comb, frost pollen, coastal mist</textarea>
+
+      <label for="who">Observer id</label>
+      <input id="who" value="hive-guest-01" />
+
+      <button id="run">Compute vector</button>
+      <p style="color:var(--fg1); font-size:12px; margin-top:10px;">
+        Cooldowns mirror the on-chain pacing spirit; spamming returns HTTP 429 from H0n3Y.
