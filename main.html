@@ -2056,3 +2056,87 @@
         { id: 'R-200', label: 'Spectral comb sector 200', bias: 0.0, gust: 0.0 },
         { id: 'R-201', label: 'Spectral comb sector 201', bias: 0.17, gust: 0.23 },
         { id: 'R-202', label: 'Spectral comb sector 202', bias: 0.34, gust: 0.46 },
+        { id: 'R-203', label: 'Spectral comb sector 203', bias: 0.51, gust: 0.69 },
+        { id: 'R-204', label: 'Spectral comb sector 204', bias: 0.68, gust: 0.92 },
+        { id: 'R-205', label: 'Spectral comb sector 205', bias: 0.85, gust: 0.15 },
+        { id: 'R-206', label: 'Spectral comb sector 206', bias: 0.02, gust: 0.38 },
+        { id: 'R-207', label: 'Spectral comb sector 207', bias: 0.19, gust: 0.61 },
+        { id: 'R-208', label: 'Spectral comb sector 208', bias: 0.36, gust: 0.84 },
+        { id: 'R-209', label: 'Spectral comb sector 209', bias: 0.53, gust: 0.07 },
+    ];
+
+    const regionSelect = document.getElementById("region");
+    const cards = document.getElementById("cards");
+
+    function seedSelect() {
+      const bases = [
+        { code: "NZ-WLG", label: "Wellington coastal mist" },
+        { code: "NZ-AKL", label: "Auckland volcanic fringe" },
+        { code: "NZ-CHC", label: "Canterbury plains" },
+        { code: "NZ-ZQN", label: "Southern alpine glen" },
+        { code: "AU-TAS", label: "Tasmanian leatherwood cross" },
+      ];
+      regionSelect.innerHTML = "";
+      for (const r of bases) {
+        const opt = document.createElement("option");
+        opt.value = r.code;
+        opt.textContent = `${r.code} — ${r.label}`;
+        regionSelect.appendChild(opt);
+      }
+    }
+
+    function renderCards(score) {
+      cards.innerHTML = "";
+      const slices = REGION_TABLE.slice(0, 9);
+      for (const s of slices) {
+        const div = document.createElement("div");
+        div.className = "mini";
+        div.innerHTML = `
+          <div style="font-weight:700; margin-bottom:6px;">${s.label}</div>
+          <div style="color:#bcd0e6; font-size:12px;">
+            bias ${s.bias.toFixed(2)} · gust ${s.gust.toFixed(2)}
+          </div>
+          <div style="margin-top:8px; color:#fde68a; font-size:12px;">
+            echo digest: ${score.digest.slice(0, 10)}…
+          </div>
+        `;
+        cards.appendChild(div);
+      }
+    }
+
+    async function runScore() {
+      const endpoint = document.getElementById("endpoint").value.replace(/\/$/, "");
+      const payload = {
+        region: regionSelect.value,
+        mgo: Number(document.getElementById("mgo").value),
+        umf: Number(document.getElementById("umf").value),
+        model: document.getElementById("model").value,
+        note: document.getElementById("note").value,
+        who: document.getElementById("who").value,
+      };
+      const btn = document.getElementById("run");
+      btn.disabled = true;
+      document.getElementById("out").textContent = "// contacting H0n3Y…";
+      try {
+        const res = await fetch(`${endpoint}/score`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const txt = await res.text();
+        let json;
+        try { json = JSON.parse(txt); } catch { json = { raw: txt }; }
+        document.getElementById("out").textContent = JSON.stringify(json, null, 2);
+        if (res.ok) renderCards(json);
+      } catch (e) {
+        document.getElementById("out").textContent = String(e);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById("run").addEventListener("click", runScore);
+    seedSelect();
+  </script>
+</body>
+</html>
